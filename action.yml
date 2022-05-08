@@ -11,7 +11,7 @@ inputs:
     default: '0.47.1'
   working-directory:
     required: true
-    default: ${{ github.workspace }}
+    default: ''
 runs:
   using: "composite"
   steps:
@@ -79,4 +79,4 @@ runs:
 
         set -o pipefail && swift run --package-path '${{ github.env.SWIFTLINT_PATH }}' swiftlint "$@" -- $changedFiles | stripPWD | convertToGitHubActionsLoggingCommands
       shell: bash
-      working-directory: '${{ inputs.working-directory }}'
+      working-directory: '${{ github.workspace }}/${{ inputs.working-directory }}'
