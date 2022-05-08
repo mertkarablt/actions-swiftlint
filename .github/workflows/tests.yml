@@ -36,7 +36,7 @@ on:
       - 'swiftlint.sh'
 
 jobs:
-  test-actions:
+  actions-tests:
     name: Actions Tests
     strategy:
       fail-fast: false
@@ -46,12 +46,6 @@ jobs:
     runs-on: ${{ matrix.virtual-environment }}
     steps:
       - uses: actions/checkout@master
-      - uses: sinoru/actions-setup-xcode@v2
-        if: ${{ startsWith(matrix.operating-system, 'macos') }}
-        with:
-          xcode-version: "12.4"
-          apple-id: ${{ secrets.APPLE_ID }}
-          apple-id-password: ${{ secrets.APPLE_ID_PASSWORD }}
       - uses: sinoru/actions-setup-swift@main
         with:
           swift-version: ${{ matrix.swift-version }}
@@ -59,7 +53,7 @@ jobs:
         with:
           working-directory: test/Warnings
 
-  test-swiftlint:
+  swiftlint-tests:
     name: SwiftLint Tests
     runs-on: ubuntu-latest
     env:
