@@ -32,6 +32,12 @@ runs:
           ${{ runner.os }}-spm-${{ inputs.swiftlint-version }}-
     - run: swift build $SWIFTLINT_PACKAGE_ARGS
       shell: bash
+    - run: |
+        pwd
+        ls -la
+        ls -la $SWITLINT_PATH
+        ls -la ${{ github.workspace }}
+        ls -la ${{ github.workspace }}/${{ inputs.working-directory }}
     - run: swiftlint.sh
       shell: bash
       working-directory: '${{ github.workspace }}/${{ inputs.working-directory }}'
