@@ -25,7 +25,7 @@ runs:
         export SWIFTLINT_PATH="$(realpath ${{ github.action_path }}/SwiftLint)"
 
         echo SWIFTLINT_PATH="$SWIFTLINT_PATH" >> $GITHUB_ENV
-        echo SWIFTLINT_PACKAGE_ARGS="--package-path "$SWIFTLINT_PATH" -c release --manifest-cache local --disable-index-store" >> $GITHUB_ENV
+        echo SWIFTLINT_PACKAGE_ARGS="--package-path "$SWIFTLINT_PATH" -c release --manifest-cache local --disable-index-store --use-integrated-swift-driver" >> $GITHUB_ENV
       shell: bash
     - uses: actions/checkout@v3
       with: 

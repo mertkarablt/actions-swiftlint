@@ -73,7 +73,7 @@ jobs:
           export SWIFTLINT_PATH="$(realpath ${{ github.workspace }}/SwiftLint)"
 
           echo SWIFTLINT_PATH="$SWIFTLINT_PATH" >> $GITHUB_ENV
-          echo SWIFTLINT_PACKAGE_ARGS="--package-path "$SWIFTLINT_PATH" -c release --manifest-cache local" >> $GITHUB_ENV
+          echo SWIFTLINT_PACKAGE_ARGS="--package-path "$SWIFTLINT_PATH" -c release --manifest-cache local --disable-index-store --use-integrated-swift-driver" >> $GITHUB_ENV
       - uses: actions/checkout@v3
         with: 
           repository: 'realm/SwiftLint'
