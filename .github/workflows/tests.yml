@@ -1,0 +1,45 @@
+name: Tests
+
+on:
+  push:
+    paths: 
+      - '.github/workflows/test.yml'
+      - 'action.yml'
+  pull_request:
+    paths: 
+      - '.github/workflows/test.yml'
+      - 'action.yml'
+
+jobs:
+  test-errors:
+    name: Tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@master
+      - uses: sinoru/actions-setup-swift
+        with:
+          swift-version: '5.6.1'
+      - uses: ./
+        working-directory: ./test/errors
+  
+  test-no-lintable-files:
+    name: Tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@master
+      - uses: sinoru/actions-setup-swift
+        with:
+          swift-version: '5.6.1'
+      - uses: ./
+        working-directory: ./test/no-lintable-files
+
+  test-Warnings:
+    name: Tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@master
+      - uses: sinoru/actions-setup-swift
+        with:
+          swift-version: '5.6.1'
+      - uses: ./
+        working-directory: ./test/Warnings
