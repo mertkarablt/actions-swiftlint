@@ -38,12 +38,23 @@ on:
 jobs:
   test-actions:
     name: Actions Tests
-    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        virtual-environment: ["ubuntu-18.04", "ubuntu-20.04", "macos-11", "macos-12"]
+        swift-version: ["5.2.5", "5.3.3", "5.4.3", "5.5.3", "5.6.1"]
+    runs-on: ${{ matrix.virtual-environment }}
     steps:
       - uses: actions/checkout@master
+      - uses: sinoru/actions-setup-xcode@v2
+        if: ${{ startsWith(matrix.operating-system, 'macos') }}
+        with:
+          xcode-version: "12.4"
+          apple-id: ${{ secrets.APPLE_ID }}
+          apple-id-password: ${{ secrets.APPLE_ID_PASSWORD }}
       - uses: sinoru/actions-setup-swift@main
         with:
-          swift-version: '5.6.1'
+          swift-version: ${{ matrix.swift-version }}
       - uses: ./
         with:
           working-directory: test/Warnings
