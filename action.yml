@@ -15,15 +15,12 @@ inputs:
 runs:
   using: "composite"
   steps:
-    - run: |
+    - name: 
+      run: |
         export SWIFTLINT_PATH="$(realpath ${{ github.action_path }}/SwiftLint)"
 
         echo SWIFTLINT_PATH="$SWIFTLINT_PATH" >> $GITHUB_ENV
         echo SWIFTLINT_PACKAGE_ARGS="--package-path "$SWIFTLINT_PATH" -c release --manifest-cache local" >> $GITHUB_ENV
-      shell: bash
-    - run: |
-        echo ${{ env.SWIFTLINT_PATH }}
-        echo $SWIFTLINT_PATH
       shell: bash
     - uses: actions/checkout@v3
       with: 
@@ -36,15 +33,10 @@ runs:
         key: swiftlint-${{ runner.os }}-spm-${{ inputs.swiftlint-version }}-${{ hashFiles('${{ env.SWIFTLINT_PATH }}/Package.*') }}
         restore-keys: |
           ${{ runner.os }}-spm-${{ inputs.swiftlint-version }}-
-    - run: swift build $SWIFTLINT_PACKAGE_ARGS
+    - name: swift build
+      run: swift build $SWIFTLINT_PACKAGE_ARGS
       shell: bash
-    - run: |
-        pwd
-        ls -la
-        ls -la $SWITLINT_PATH
-        ls -la ${{ github.workspace }}
-        ls -la ${{ github.workspace }}/${{ inputs.working-directory }}
-      shell: bash
-    - run: ${{ github.action_path }}/swiftlint.sh
+    - name: swift run
+      run: ${{ github.action_path }}/swiftlint.sh
       shell: bash
       working-directory: '${{ github.workspace }}/${{ inputs.working-directory }}'
