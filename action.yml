@@ -35,9 +35,9 @@ runs:
     - uses: actions/cache@v3
       with:
         path: '${{ env.SWIFTLINT_PATH }}/.build'
-        key: swiftlint-${{ runner.os }}-spm-${{ inputs.swiftlint-version }}-${{ hashFiles('${{ env.SWIFTLINT_PATH }}/Package.*') }}
+        key: swiftlint-${{ runner.os }}-swift-${{ env.SWIFT_VERSION }}-${{ inputs.swiftlint-version }}-${{ hashFiles('${{ env.SWIFTLINT_PATH }}/Package.*') }}
         restore-keys: |
-          ${{ runner.os }}-spm-${{ inputs.swiftlint-version }}-
+          swiftlint-${{ runner.os }}-swift-${{ env.SWIFT_VERSION }}-${{ inputs.swiftlint-version }}-
     - name: swift build
       run: swift build $SWIFTLINT_PACKAGE_ARGS --product swiftlint
       shell: bash
