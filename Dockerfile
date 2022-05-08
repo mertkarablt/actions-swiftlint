@@ -1,4 +1,4 @@
-FROM norionomura/swiftlint:swift-5
+FROM ghcr.io/realm/swiftlint:latest
 LABEL version="3.2.1"
 LABEL repository="https://github.com/norio-nomura/action-swiftlint"
 LABEL homepage="https://github.com/norio-nomura/action-swiftlint"
