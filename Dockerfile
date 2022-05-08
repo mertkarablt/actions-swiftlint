@@ -1,5 +1,5 @@
 FROM ghcr.io/realm/swiftlint:latest
-LABEL version="3.2.1"
+LABEL version="5.0.0"
 LABEL repository="https://github.com/sinoru/actions-swiftlint"
 LABEL homepage="https://github.com/sinoru/actions-swiftlint"
 LABEL maintainer="Jaehong Kang <sinoru@me.com>"
