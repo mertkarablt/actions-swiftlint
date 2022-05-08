@@ -19,6 +19,9 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 #
+# Copyright (c) 2022 Jaehong Kang
+# Licensed under Apache License v2.0
+#
 # convert swiftlint's output into GitHub Actions Logging commands
 # https://help.github.com/en/github/automating-your-workflow-with-github-actions/development-tools-for-github-actions#logging-commands
 
