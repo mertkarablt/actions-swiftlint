@@ -38,6 +38,7 @@ runs:
         ls -la $SWITLINT_PATH
         ls -la ${{ github.workspace }}
         ls -la ${{ github.workspace }}/${{ inputs.working-directory }}
+      shell: bash
     - run: swiftlint.sh
       shell: bash
       working-directory: '${{ github.workspace }}/${{ inputs.working-directory }}'
