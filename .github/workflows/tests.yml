@@ -58,23 +58,12 @@ jobs:
       - uses: ./
         with:
           working-directory: test/Warnings
-      - uses: ./
-        with:
-          swiftlint-args: --strict
-          working-directory: test/Warnings
-        continue-on-error: true
-      - uses: ./
-        with:
-          working-directory: test/errors
-        continue-on-error: true
-      - uses: ./
-        with:
-          working-directory: test/no-lintable-files
-        continue-on-error: true
 
   test-swiftlint:
     name: SwiftLint Tests
     runs-on: ubuntu-latest
+    env:
+      SWIFTLINT_VERSION: '0.47.1'
     steps:
       - uses: actions/checkout@master
       - uses: sinoru/actions-setup-swift@main
@@ -88,15 +77,15 @@ jobs:
       - uses: actions/checkout@v3
         with: 
           repository: 'realm/SwiftLint'
-          ref: '${{ inputs.swiftlint-version }}'
+          ref: '${{ env.SWIFTLINT_VERSION }}'
           path: '${{ env.SWIFTLINT_PATH }}'
       - uses: actions/cache@v3
         id: cache
         with:
           path: '${{ env.SWIFTLINT_PATH }}/.build'
-          key: sinoru/actions-swiftlint-${{ runner.os }}-swift-${{ env.SWIFT_VERSION }}-${{ inputs.swiftlint-version }}-${{ hashFiles('${{ env.SWIFTLINT_PATH }}/Package.*') }}
+          key: sinoru/actions-swiftlint-${{ runner.os }}-swift-${{ env.SWIFT_VERSION }}-${{ env.SWIFTLINT_VERSION }}-${{ hashFiles('${{ env.SWIFTLINT_PATH }}/Package.*') }}
           restore-keys: |
-            sinoru/actions-swiftlint-${{ runner.os }}-swift-${{ env.SWIFT_VERSION }}-${{ inputs.swiftlint-version }}-
+            sinoru/actions-swiftlint-${{ runner.os }}-swift-${{ env.SWIFT_VERSION }}-${{ env.SWIFTLINT_VERSION }}-
             sinoru/actions-swiftlint-${{ runner.os }}-swift-${{ env.SWIFT_VERSION }}-
             sinoru/actions-swiftlint-${{ runner.os }}-swift-
       - name: swift build
