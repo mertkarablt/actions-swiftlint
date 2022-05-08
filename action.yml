@@ -17,7 +17,7 @@ runs:
   steps:
     - run: |
         echo 'SWIFTLINT_PATH=${{ github.action_path }}/SwiftLint' >> $GITHUB_ENV
-        echo 'SWIFTLINT_PACKAGE_ARGS=--package-path "$SWIFTLINT_PATH" -c release --manifest-cache local' >> $GITHUB_ENV
+        echo 'SWIFTLINT_PACKAGE_ARGS=--package-path "${{ github.action_path }}/SwiftLint" -c release --manifest-cache local' >> $GITHUB_ENV
       shell: bash
     - run: |
         echo ${{ env.SWIFTLINT_PATH }}
