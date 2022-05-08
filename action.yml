@@ -45,6 +45,6 @@ runs:
         ls -la ${{ github.workspace }}
         ls -la ${{ github.workspace }}/${{ inputs.working-directory }}
       shell: bash
-    - run: swiftlint.sh
+    - run: ${{ github.action_path }}/swiftlint.sh
       shell: bash
       working-directory: '${{ github.workspace }}/${{ inputs.working-directory }}'
