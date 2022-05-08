@@ -21,18 +21,21 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
+      - uses: sinoru/actions-setup-swift@v2
+        with:
+          swift-version: '5.6.1'
       - name: GitHub Actions for SwiftLint
         uses: sinoru/actions-swiftlint@v5
       - name: GitHub Actions for SwiftLint with --strict
         uses: sinoru/actions-swiftlint@v5
         with:
-          args: --strict
+          swiftlint-args: --strict
       - name: GitHub Actions for SwiftLint (Only files changed in the PR)
         uses: sinoru/actions-swiftlint@v5
         env:
           DIFF_BASE: ${{ github.base_ref }}
       - name: GitHub Actions for SwiftLint (Different working directory)
         uses: sinoru/actions-swiftlint@v5
-        env:
-          WORKING_DIRECTORY: Source
+        with:
+          working-directory: Sources
 ```

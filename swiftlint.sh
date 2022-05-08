@@ -1,3 +1,4 @@
+#!/bin/bash
 # Copyright (c) 2018 Norio Nomura
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -17,30 +18,30 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
+#
+# Copyright (c) 2022 Jaehong Kang
+# Licensed under Apache License v2.0
+#
+# convert swiftlint's output into GitHub Actions Logging commands
+# https://help.github.com/en/github/automating-your-workflow-with-github-actions/development-tools-for-github-actions#logging-commands
 
-name: Docker Lint
+function stripPWD() {
+    sed -E "s/$(pwd|sed 's/\//\\\//g')\///"
+}
 
-on:
-  push:
-    paths: 
-      - '.github/workflows/docker-lint.yml'
-      - '.dockerfilelintrc'
-      - '.dockerignore'
-      - 'Dockerfile'
-  pull_request:
-    paths: 
-      - '.github/workflows/docker-lint.yml'
-      - '.dockerfilelintrc'
-      - '.dockerignore'
-      - 'Dockerfile'
+function convertToGitHubActionsLoggingCommands() {
+    sed -E 's/^(.*):([0-9]+):([0-9]+): (warning|error|[^:]+): (.*)/::\4 file=\1,line=\2,col=\3::\5/'
+}
 
-jobs:
-  DockerLint:
-    name: Docker Lint
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@master
-      - name: Docker Lint
-        uses: docker://replicated/dockerfilelint
-        with:
-          args: Dockerfile
+if ! ${DIFF_BASE+false};
+then
+	changedFiles=$(git --no-pager diff --name-only --relative FETCH_HEAD $(git merge-base FETCH_HEAD $DIFF_BASE) -- '*.swift')
+
+	if [ -z "$changedFiles" ]
+	then
+		echo "No Swift file changed"
+		exit
+	fi
+fi
+
+set -o pipefail && swift run $SWIFTLINT_PACKAGE_ARGS --skip-build swiftlint "$@" -- $changedFiles | stripPWD | convertToGitHubActionsLoggingCommands

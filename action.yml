@@ -1,9 +1,52 @@
+# Copyright (c) 2022 Jaehong Kang
+# Licensed under Apache License v2.0
+
 name: 'GitHub Actions for SwiftLint'
 description: 'A tool to enforce Swift style and conventions'
 author: 'Jaehong Kang <sinoru@me.com>'
-runs:
-  using: 'docker'
-  image: 'Dockerfile'
 branding:
   icon: 'shield'
   color: 'orange'
+inputs:
+  swiftlint-version:
+    description: "A SwiftLint version to use."
+    required: true
+    default: '0.47.1'
+  swiftlint-args:
+    description: "Arguments to SwiftLint."
+    required: false
+  working-directory:
+    required: true
+    default: ''
+runs:
+  using: "composite"
+  steps:
+    - run: |
+        export SWIFTLINT_PATH="$(cd ${{ github.action_path }} && pwd -L)/SwiftLint"
+
+        echo SWIFTLINT_PATH="$SWIFTLINT_PATH" >> $GITHUB_ENV
+        echo SWIFTLINT_PACKAGE_ARGS="--package-path "$SWIFTLINT_PATH" -c release --manifest-cache local --disable-index-store --use-integrated-swift-driver" >> $GITHUB_ENV
+      shell: bash
+    - uses: actions/checkout@v3
+      with: 
+        repository: 'realm/SwiftLint'
+        ref: '${{ inputs.swiftlint-version }}'
+        path: '${{ env.SWIFTLINT_PATH }}'
+    - uses: actions/cache@v3
+      id: cache
+      with:
+        path: '${{ env.SWIFTLINT_PATH }}/.build'
+        key: sinoru-actions-swiftlint-${{ runner.os }}-swift-${{ env.SWIFT_VERSION }}-${{ inputs.swiftlint-version }}-${{ hashFiles('${{ env.SWIFTLINT_PATH }}/Package.*') }}
+        restore-keys: |
+          sinoru-actions-swiftlint-${{ runner.os }}-swift-${{ env.SWIFT_VERSION }}-${{ inputs.swiftlint-version }}-
+          sinoru-actions-swiftlint-${{ runner.os }}-swift-${{ env.SWIFT_VERSION }}-
+          sinoru-actions-swiftlint-${{ runner.os }}-swift-
+    - name: swift build
+      if: steps.cache.outputs.cache-hit != 'true'
+      run: swift package --package-path "$SWIFTLINT_PATH" reset && swift build $SWIFTLINT_PACKAGE_ARGS --product swiftlint
+      shell: bash
+    - name: swift run
+      run: ${{ github.action_path }}/swiftlint.sh ${{ inputs.swiftlint-args }}
+      shell: bash
+      working-directory: '${{ github.workspace }}/${{ inputs.working-directory }}'
+ 
