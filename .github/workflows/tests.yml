@@ -21,7 +21,7 @@ jobs:
       - uses: sinoru/actions-setup-swift@main
         with:
           swift-version: '5.6.1'
-      - uses: .
+      - uses: ./
         with:
           working-directory: test/errors
   
@@ -33,7 +33,7 @@ jobs:
       - uses: sinoru/actions-setup-swift@main
         with:
           swift-version: '5.6.1'
-      - uses: .
+      - uses: ./
         with:
           working-directory: test/no-lintable-files
 
@@ -45,6 +45,6 @@ jobs:
       - uses: sinoru/actions-setup-swift@main
         with:
           swift-version: '5.6.1'
-      - uses: .
+      - uses: ./
         with:
           working-directory: test/Warnings
