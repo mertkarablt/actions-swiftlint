@@ -81,7 +81,7 @@ jobs:
         with:
           swift-version: '5.6.1'
       - run: |
-          export SWIFTLINT_PATH="$(readlink -f ${{ github.workspace }}/SwiftLint)"
+          export SWIFTLINT_PATH="$(readlink -f ${{ github.workspace }})/SwiftLint"
 
           echo SWIFTLINT_PATH="$SWIFTLINT_PATH" >> $GITHUB_ENV
           echo SWIFTLINT_PACKAGE_ARGS="--package-path "$SWIFTLINT_PATH" -c release --manifest-cache local --disable-index-store --use-integrated-swift-driver" >> $GITHUB_ENV
