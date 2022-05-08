@@ -101,49 +101,49 @@ jobs:
 
       - name: Exit Status on Errors
         run: |
-          STATUS=$(swiftlint.sh; echo $?)
+          STATUS=$(${{ github.workspace }}/swiftlint.sh; echo $?)
           [[ $STATUS == "2" ]]
         shell: bash
         working-directory: test/errors
 
       - name: Exit Status on No lintable files
         run: |
-          STATUS=$(swiftlint.sh; echo $?)
+          STATUS=$(${{ github.workspace }}/swiftlint.sh; echo $?)
           [[ $STATUS == "1" ]]
         shell: bash
         working-directory: test/no-lintable-files
 
       - name: Exit Status on Warnings
         run: |
-          STATUS=$(swiftlint.sh; echo $?)
+          STATUS=$(${{ github.workspace }}/swiftlint.sh; echo $?)
           [[ $STATUS == "0" ]]
         shell: bash
         working-directory: test/Warnings
 
       - name: Exit Status on Warnings with `--strict`
         run: |
-          STATUS=$(swiftlint.sh --strict; echo $?)
+          STATUS=$(${{ github.workspace }}/swiftlint.sh --strict; echo $?)
           [[ $STATUS == "2" ]]
         shell: bash
         working-directory: test/Warnings
       
       - name: Output on Errors
         run: |
-          diff <(swiftlint.sh|sort) expected.txt
+          diff <(${{ github.workspace }}/swiftlint.sh|sort) expected.txt
           [[ $STATUS == "2" ]]
         shell: bash
         working-directory: test/errors
     
       - name: Output on Warnings
         run: |
-          diff <(swiftlint.sh|sort) expected.txt
+          diff <(${{ github.workspace }}/swiftlint.sh|sort) expected.txt
           [[ $STATUS == "2" ]]
         shell: bash
         working-directory: test/Warnings
       
       - name: Output on Warnings
         run: |
-          diff <(swiftlint.sh|sort) expected.txt
+          diff <(${{ github.workspace }}/swiftlint.sh|sort) expected.txt
           [[ $STATUS == "2" ]]
         shell: bash
         working-directory: test/Warnings
