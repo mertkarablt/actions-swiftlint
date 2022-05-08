@@ -27,11 +27,11 @@ runs:
       with: 
         repository: 'realm/SwiftLint'
         ref: '${{ inputs.swiftlint-version }}'
-        path: '${{ github.env.SWIFTLINT_PATH }}'
+        path: '${{ env.SWIFTLINT_PATH }}'
     - uses: actions/cache@v3
       with:
-        path: '${{ github.env.SWIFTLINT_PATH }}/.build'
-        key: swiftlint-${{ runner.os }}-spm-${{ inputs.swiftlint-version }}-${{ hashFiles('${{ github.env.SWIFTLINT_PATH }}/Package.*') }}
+        path: '${{ env.SWIFTLINT_PATH }}/.build'
+        key: swiftlint-${{ runner.os }}-spm-${{ inputs.swiftlint-version }}-${{ hashFiles('${{ env.SWIFTLINT_PATH }}/Package.*') }}
         restore-keys: |
           ${{ runner.os }}-spm-${{ inputs.swiftlint-version }}-
     - run: swift build $SWIFTLINT_PACKAGE_ARGS
