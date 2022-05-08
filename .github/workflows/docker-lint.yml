@@ -23,13 +23,15 @@ name: Docker Lint
 on:
   push:
     paths: 
-      - '.dockerignore'
       - '.github/workflows/docker-lint.yml'
+      - '.dockerfilelintrc'
+      - '.dockerignore'
       - 'Dockerfile'
   pull_request:
     paths: 
+       - '.github/workflows/docker-lint.yml'
+      - '.dockerfilelintrc'
       - '.dockerignore'
-      - '.github/workflows/docker-lint.yml'
       - 'Dockerfile'
 
 jobs:
