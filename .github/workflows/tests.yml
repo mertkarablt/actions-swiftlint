@@ -21,7 +21,7 @@ jobs:
           swift-version: '5.6.1'
       - uses: ./
         with:
-          working-directory: ./test/errors
+          working-directory: test/errors
   
   test-no-lintable-files:
     name: Tests
@@ -33,7 +33,7 @@ jobs:
           swift-version: '5.6.1'
       - uses: ./
         with:
-          working-directory: ./test/no-lintable-files
+          working-directory: test/no-lintable-files
 
   test-Warnings:
     name: Tests
@@ -45,4 +45,4 @@ jobs:
           swift-version: '5.6.1'
       - uses: ./
         with:
-          working-directory: ./test/Warnings
+          working-directory: test/Warnings

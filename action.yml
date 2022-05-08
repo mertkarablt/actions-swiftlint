@@ -87,4 +87,4 @@ runs:
 
         set -o pipefail && swift run $SWIFTLINT_PACKAGE_ARGS swiftlint "$@" -- $changedFiles | stripPWD | convertToGitHubActionsLoggingCommands
       shell: bash
-      working-directory: '${{ github.workspace }}/${{ inputs.working-directory }}'
+      working-directory: '${{ github.workspace }}${{ inputs.working-directory }}'
