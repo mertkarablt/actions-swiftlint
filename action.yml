@@ -27,11 +27,7 @@ runs:
         echo SWIFTLINT_PATH="$SWIFTLINT_PATH" >> $GITHUB_ENV
         echo SWIFTLINT_PACKAGE_ARGS="--package-path "$SWIFTLINT_PATH" -c release --manifest-cache local --disable-index-store --use-integrated-swift-driver" >> $GITHUB_ENV
       shell: bash
-    - uses: actions/checkout@v3
-      with: 
-        repository: 'realm/SwiftLint'
-        ref: '${{ inputs.swiftlint-version }}'
-        path: '${{ env.SWIFTLINT_PATH }}'
+    - run: git clone --depth 1 --branch "${{ inputs.swiftlint-version }}" https://github.com/realm/SwiftLint.git "${{ env.SWIFTLINT_PATH }}"
     - uses: actions/cache@v3
       id: cache
       with:
