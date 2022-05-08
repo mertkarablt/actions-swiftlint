@@ -5,10 +5,12 @@ on:
     paths: 
       - '.github/workflows/tests.yml'
       - 'action.yml'
+      - 'swiftlint.sh'
   pull_request:
     paths: 
       - '.github/workflows/tests.yml'
       - 'action.yml'
+      - 'swiftlint.sh'
 
 jobs:
   test-errors:
