@@ -24,7 +24,7 @@ runs:
     - run: |
         export SWIFTLINT_PATH="$(cd ${{ github.action_path }} && pwd -L)/SwiftLint"
         
-        echo SWIFTLINT_OS_VERSION_HASH="$(uname -prsv | openssl dgst -sha256)" >> $GITHUB_ENV
+        echo SWIFTLINT_OS_VERSION_HASH="$(uname -prsv | openssl dgst -sha256 -binary | xxd -p -c 256)" >> $GITHUB_ENV
         echo SWIFTLINT_PATH="$SWIFTLINT_PATH" >> $GITHUB_ENV
         echo SWIFTLINT_PACKAGE_ARGS="--package-path "$SWIFTLINT_PATH" -c release --manifest-cache local --disable-index-store --use-integrated-swift-driver" >> $GITHUB_ENV
       shell: bash
