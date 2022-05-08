@@ -26,7 +26,7 @@ jobs:
       - name: GitHub Actions for SwiftLint with --strict
         uses: sinoru/actions-swiftlint@v5
         with:
-          args: --strict
+          swiftlint-args: --strict
       - name: GitHub Actions for SwiftLint (Only files changed in the PR)
         uses: sinoru/actions-swiftlint@v5
         env:
@@ -34,5 +34,5 @@ jobs:
       - name: GitHub Actions for SwiftLint (Different working directory)
         uses: sinoru/actions-swiftlint@v5
         env:
-          WORKING_DIRECTORY: Source
+          working-directory: Source
 ```

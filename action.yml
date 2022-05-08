@@ -9,14 +9,16 @@ inputs:
     description: "A SwiftLint version to use."
     required: true
     default: '0.47.1'
+  swiftlint-args:
+    description: "Arguments to SwiftLint."
+    required: false
   working-directory:
     required: true
     default: ''
 runs:
   using: "composite"
   steps:
-    - name: 
-      run: |
+    - run: |
         export SWIFTLINT_PATH="$(realpath ${{ github.action_path }}/SwiftLint)"
 
         echo SWIFTLINT_PATH="$SWIFTLINT_PATH" >> $GITHUB_ENV
@@ -37,6 +39,6 @@ runs:
       run: swift build $SWIFTLINT_PACKAGE_ARGS
       shell: bash
     - name: swift run
-      run: ${{ github.action_path }}/swiftlint.sh
+      run: ${{ github.action_path }}/swiftlint.sh ${{ inputs.swiftlint-args }}
       shell: bash
       working-directory: '${{ github.workspace }}/${{ inputs.working-directory }}'
