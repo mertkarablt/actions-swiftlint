@@ -1,8 +1,8 @@
 FROM ghcr.io/realm/swiftlint:latest
 LABEL version="3.2.1"
-LABEL repository="https://github.com/norio-nomura/action-swiftlint"
-LABEL homepage="https://github.com/norio-nomura/action-swiftlint"
-LABEL maintainer="Norio Nomura <norio.nomura@gmail.com>"
+LABEL repository="https://github.com/sinoru/actions-swiftlint"
+LABEL homepage="https://github.com/sinoru/actions-swiftlint"
+LABEL maintainer="Jaehong Kang <sinoru@me.com>"
 
 LABEL "com.github.actions.name"="GitHub Action for SwiftLint"
 LABEL "com.github.actions.description"="A tool to enforce Swift style and conventions."
