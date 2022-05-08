@@ -22,7 +22,6 @@ name: Docker Build
 
 on:
   push:
-    branches: [master]
     paths: 
       - '.dockerignore'
       - '.github/workflows/docker-build.yml'
