@@ -22,7 +22,7 @@ runs:
         repository: 'realm/SwiftLint'
         ref: '${{ inputs.swiftlint-version }}'
         path: '${{ github.env.SWIFTLINT_PATH }}'
-    - run: swift build --package-path '${{ github.env.SWIFTLINT_PATH }}'
+    - run: swift build --package-path '${{ github.env.SWIFTLINT_PATH }}' -c 'release'
       shell: bash
     - name: SwiftLint
       run: |
@@ -77,6 +77,6 @@ runs:
           fi
         fi
 
-        set -o pipefail && swift run --package-path '${{ github.env.SWIFTLINT_PATH }}' swiftlint "$@" -- $changedFiles | stripPWD | convertToGitHubActionsLoggingCommands
+        set -o pipefail && swift run --package-path '${{ github.env.SWIFTLINT_PATH }}' -c 'release' swiftlint "$@" -- $changedFiles | stripPWD | convertToGitHubActionsLoggingCommands
       shell: bash
       working-directory: '${{ github.workspace }}/${{ inputs.working-directory }}'
