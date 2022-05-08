@@ -1,3 +1,26 @@
+# Copyright (c) 2018 Norio Nomura
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included in all
+# copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+# SOFTWARE.
+#
+# Copyright (c) 2022 Jaehong Kang
+# Licensed under Apache License v2.0
+
 name: Tests
 
 on:
@@ -13,32 +36,8 @@ on:
       - 'swiftlint.sh'
 
 jobs:
-  test-errors:
-    name: Tests
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@master
-      - uses: sinoru/actions-setup-swift@main
-        with:
-          swift-version: '5.6.1'
-      - uses: ./
-        with:
-          working-directory: test/errors
-  
-  test-no-lintable-files:
-    name: Tests
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@master
-      - uses: sinoru/actions-setup-swift@main
-        with:
-          swift-version: '5.6.1'
-      - uses: ./
-        with:
-          working-directory: test/no-lintable-files
-
-  test-Warnings:
-    name: Tests
+  test-actions:
+    name: Actions Tests
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@master
@@ -48,3 +47,85 @@ jobs:
       - uses: ./
         with:
           working-directory: test/Warnings
+      - uses: ./
+        with:
+          swiftlint-args: --strict
+          working-directory: test/Warnings
+        continue-on-error: true
+      - uses: ./
+        with:
+          working-directory: test/errors
+        continue-on-error: true
+      - uses: ./
+        with:
+          working-directory: test/no-lintable-files
+        continue-on-error: true
+
+  test-swiftlint:
+    name: SwiftLint Tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@master
+      - uses: sinoru/actions-setup-swift@main
+        with:
+          swift-version: '5.6.1'
+      - run: |
+          export SWIFTLINT_PATH="$(realpath ${{ github.workspace }}/SwiftLint)"
+
+          echo SWIFTLINT_PATH="$SWIFTLINT_PATH" >> $GITHUB_ENV
+          echo SWIFTLINT_PACKAGE_ARGS="--package-path "$SWIFTLINT_PATH" -c release --manifest-cache local" >> $GITHUB_ENV
+      - uses: actions/checkout@v3
+        with: 
+          repository: 'realm/SwiftLint'
+          ref: '${{ inputs.swiftlint-version }}'
+          path: '${{ env.SWIFTLINT_PATH }}'
+      - uses: actions/cache@v3
+        with:
+          path: '${{ env.SWIFTLINT_PATH }}/.build'
+          key: swiftlint-${{ runner.os }}-spm-${{ inputs.swiftlint-version }}-${{ hashFiles('${{ env.SWIFTLINT_PATH }}/Package.*') }}
+          restore-keys: |
+            ${{ runner.os }}-spm-${{ inputs.swiftlint-version }}-
+      - name: swift build
+        run: swift build $SWIFTLINT_PACKAGE_ARGS
+
+      - name: Exit Status on Errors
+        run: |
+          STATUS=$(swiftlint.sh &>/dev/null; echo $?)
+          [[ $STATUS == "2" ]]
+        working-directory: test/errors
+
+      - name: Exit Status on No lintable files
+        run: |
+          STATUS=$(swiftlint.sh &>/dev/null; echo $?)
+          [[ $STATUS == "1" ]]
+        working-directory: test/no-lintable-files
+
+      - name: Exit Status on Warnings
+        run: |
+          STATUS=$(swiftlint.sh &>/dev/null; echo $?)
+          [[ $STATUS == "0" ]]
+        working-directory: test/Warnings
+
+      - name: Exit Status on Warnings with `--strict`
+        run: |
+          STATUS=$(swiftlint.sh --strict &>/dev/null; echo $?)
+          [[ $STATUS == "2" ]]
+        working-directory: test/Warnings
+      
+      - name: Output on Errors
+        run: |
+          diff <(swiftlint.sh|sort) expected.txt
+          [[ $STATUS == "2" ]]
+        working-directory: test/errors
+    
+      - name: Output on Warnings
+        run: |
+          diff <(swiftlint.sh|sort) expected.txt
+          [[ $STATUS == "2" ]]
+        working-directory: test/Warnings
+      
+      - name: Output on Warnings
+        run: |
+          diff <(swiftlint.sh|sort) expected.txt
+          [[ $STATUS == "2" ]]
+        working-directory: test/Warnings
