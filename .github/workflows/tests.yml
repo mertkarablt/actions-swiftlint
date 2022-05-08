@@ -91,38 +91,45 @@ jobs:
           ref: '${{ inputs.swiftlint-version }}'
           path: '${{ env.SWIFTLINT_PATH }}'
       - uses: actions/cache@v3
+        id: cache
         with:
           path: '${{ env.SWIFTLINT_PATH }}/.build'
-          key: swiftlint-${{ runner.os }}-spm-${{ inputs.swiftlint-version }}-${{ hashFiles('${{ env.SWIFTLINT_PATH }}/Package.*') }}
+          key: swiftlint-${{ runner.os }}-swift-${{ env.SWIFT_VERSION }}-${{ inputs.swiftlint-version }}-${{ hashFiles('${{ env.SWIFTLINT_PATH }}/Package.*') }}
           restore-keys: |
-            ${{ runner.os }}-spm-${{ inputs.swiftlint-version }}-
+            swiftlint-${{ runner.os }}-swift-${{ env.SWIFT_VERSION }}-${{ inputs.swiftlint-version }}-
+            swiftlint-${{ runner.os }}-swift-${{ env.SWIFT_VERSION }}-
+            swiftlint-${{ runner.os }}-swift-
       - name: swift build
         run: swift build $SWIFTLINT_PACKAGE_ARGS
 
       - name: Exit Status on Errors
         run: |
-          STATUS=$(${{ github.workspace }}/swiftlint.sh; echo $?)
+          STATUS=$(${{ github.workspace }}/swiftlint.sh &>/dev/null; echo $?)
+          echo $STATUS
           [[ $STATUS == "2" ]]
         shell: bash
         working-directory: test/errors
 
       - name: Exit Status on No lintable files
         run: |
-          STATUS=$(${{ github.workspace }}/swiftlint.sh; echo $?)
+          STATUS=$(${{ github.workspace }}/swiftlint.sh &>/dev/null; echo $?)
+          echo $STATUS
           [[ $STATUS == "1" ]]
         shell: bash
         working-directory: test/no-lintable-files
 
       - name: Exit Status on Warnings
         run: |
-          STATUS=$(${{ github.workspace }}/swiftlint.sh; echo $?)
+          STATUS=$(${{ github.workspace }}/swiftlint.sh &>/dev/null; echo $?)
+          echo $STATUS
           [[ $STATUS == "0" ]]
         shell: bash
         working-directory: test/Warnings
 
       - name: Exit Status on Warnings with `--strict`
         run: |
-          STATUS=$(${{ github.workspace }}/swiftlint.sh --strict; echo $?)
+          STATUS=$(${{ github.workspace }}/swiftlint.sh --strict &>/dev/null; echo $?)
+          echo $STATUS
           [[ $STATUS == "2" ]]
         shell: bash
         working-directory: test/Warnings
@@ -130,20 +137,11 @@ jobs:
       - name: Output on Errors
         run: |
           diff <(${{ github.workspace }}/swiftlint.sh|sort) expected.txt
-          [[ $STATUS == "2" ]]
         shell: bash
         working-directory: test/errors
     
       - name: Output on Warnings
         run: |
           diff <(${{ github.workspace }}/swiftlint.sh|sort) expected.txt
-          [[ $STATUS == "2" ]]
-        shell: bash
-        working-directory: test/Warnings
-      
-      - name: Output on Warnings
-        run: |
-          diff <(${{ github.workspace }}/swiftlint.sh|sort) expected.txt
-          [[ $STATUS == "2" ]]
         shell: bash
         working-directory: test/Warnings
