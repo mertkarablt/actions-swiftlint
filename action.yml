@@ -9,6 +9,9 @@ inputs:
     description: "A SwiftLint version to use."
     required: true
     default: '0.47.1'
+  working-directory:
+    required: true
+    default: ${{ github.workspace }}
 runs:
   using: "composite"
   steps:
@@ -74,3 +77,4 @@ runs:
 
         set -o pipefail && swift run --package-path '${{ github.env.SWIFTLINT_PATH }}' swiftlint "$@" -- $changedFiles | stripPWD | convertToGitHubActionsLoggingCommands
       shell: bash
+      working-directory: '${{ inputs.working-directory }}'
