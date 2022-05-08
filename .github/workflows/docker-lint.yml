@@ -29,7 +29,7 @@ on:
       - 'Dockerfile'
   pull_request:
     paths: 
-       - '.github/workflows/docker-lint.yml'
+      - '.github/workflows/docker-lint.yml'
       - '.dockerfilelintrc'
       - '.dockerignore'
       - 'Dockerfile'
