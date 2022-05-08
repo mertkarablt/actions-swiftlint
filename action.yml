@@ -19,6 +19,10 @@ runs:
         echo "{SWIFTLINT_PATH}={${{ github.action_path }}/SwiftLint}" >> $GITHUB_ENV
         echo "{SWIFTLINT_PACKAGE_ARGS}={--package-path '${{ github.action_path }}/SwiftLint' -c release --manifest-cache local}"
       shell: bash
+    - run: |
+        echo ${{ github.env.SWIFTLINT_PATH }}
+        echo $SWIFTLINT_PATH
+      shell: bash
     - uses: actions/checkout@v3
       with: 
         repository: 'realm/SwiftLint'
