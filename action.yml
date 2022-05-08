@@ -15,14 +15,22 @@ inputs:
 runs:
   using: "composite"
   steps:
-    - run: echo "{SWIFTLINT_PATH}={${{ github.action_path }}/SwiftLint}" >> $GITHUB_ENV
+    - run: |
+        echo "{SWIFTLINT_PATH}={${{ github.action_path }}/SwiftLint}" >> $GITHUB_ENV
+        echo "{SWIFTLINT_PACKAGE_ARGS}={--package-path '$SWIFTLINT_PATH' -c release --manifest-cache local}"
       shell: bash
     - uses: actions/checkout@v3
       with: 
         repository: 'realm/SwiftLint'
         ref: '${{ inputs.swiftlint-version }}'
         path: '${{ github.env.SWIFTLINT_PATH }}'
-    - run: swift build --package-path '${{ github.env.SWIFTLINT_PATH }}' -c 'release'
+    - uses: actions/cache@v3
+      with:
+        path: '${{ github.env.SWIFTLINT_PATH }}/.build'
+        key: swiftlint-${{ runner.os }}-spm-${{ inputs.swiftlint-version }}-${{ hashFiles('${{ github.env.SWIFTLINT_PATH }}/Package.*') }}
+        restore-keys: |
+          ${{ runner.os }}-spm-${{ inputs.swiftlint-version }}-
+    - run: swift build $SWIFTLINT_PACKAGE_ARGS
       shell: bash
     - name: SwiftLint
       run: |
@@ -77,6 +85,6 @@ runs:
           fi
         fi
 
-        set -o pipefail && swift run --package-path '${{ github.env.SWIFTLINT_PATH }}' -c 'release' swiftlint "$@" -- $changedFiles | stripPWD | convertToGitHubActionsLoggingCommands
+        set -o pipefail && swift run $SWIFTLINT_PACKAGE_ARGS swiftlint "$@" -- $changedFiles | stripPWD | convertToGitHubActionsLoggingCommands
       shell: bash
       working-directory: '${{ github.workspace }}/${{ inputs.working-directory }}'
