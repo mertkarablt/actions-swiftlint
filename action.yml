@@ -16,8 +16,8 @@ runs:
   using: "composite"
   steps:
     - run: |
-        echo "{SWIFTLINT_PATH}={${{ github.action_path }}SwiftLint}" >> $GITHUB_ENV
-        echo "{SWIFTLINT_PACKAGE_ARGS}={--package-path '${{ github.action_path }}SwiftLint' -c release --manifest-cache local}"
+        echo "{SWIFTLINT_PATH}={${{ github.action_path }}/SwiftLint}" >> $GITHUB_ENV
+        echo "{SWIFTLINT_PACKAGE_ARGS}={--package-path '${{ github.action_path }}/SwiftLint' -c release --manifest-cache local}"
       shell: bash
     - uses: actions/checkout@v3
       with: 
@@ -34,4 +34,4 @@ runs:
       shell: bash
     - run: swiftlint.sh
       shell: bash
-      working-directory: '${{ github.workspace }}${{ inputs.working-directory }}'
+      working-directory: '${{ github.workspace }}/${{ inputs.working-directory }}'
