@@ -77,11 +77,11 @@ jobs:
         id: cache
         with:
           path: '${{ env.SWIFTLINT_PATH }}/.build'
-          key: sinoru-actions-swiftlint-${{ runner.os }}-${{ hashFiles('/etc/os-release') }}-swift-${{ env.SWIFT_VERSION }}-${{ env.SWIFTLINT_VERSION }}-${{ hashFiles('${{ env.SWIFTLINT_PATH }}/Package.*') }}
+          key: sinoru-actions-swiftlint-${{ runner.os }}-swift-${{ env.SWIFT_VERSION }}-${{ env.SWIFTLINT_VERSION }}-${{ hashFiles('${{ env.SWIFTLINT_PATH }}/Package.*') }}
           restore-keys: |
-            sinoru-actions-swiftlint-${{ runner.os }}-${{ hashFiles('/etc/os-release') }}-swift-${{ env.SWIFT_VERSION }}-${{ env.SWIFTLINT_VERSION }}-
-            sinoru-actions-swiftlint-${{ runner.os }}-${{ hashFiles('/etc/os-release') }}-swift-${{ env.SWIFT_VERSION }}-
-            sinoru-actions-swiftlint-${{ runner.os }}-${{ hashFiles('/etc/os-release') }}-swift-
+            sinoru-actions-swiftlint-${{ runner.os }}-swift-${{ env.SWIFT_VERSION }}-${{ env.SWIFTLINT_VERSION }}-
+            sinoru-actions-swiftlint-${{ runner.os }}-swift-${{ env.SWIFT_VERSION }}-
+            sinoru-actions-swiftlint-${{ runner.os }}-swift-
       - name: swift build
         run: swift build $SWIFTLINT_PACKAGE_ARGS
 
