@@ -66,6 +66,7 @@ jobs:
       - run: |
           export SWIFTLINT_PATH="$(cd ${{ github.workspace }} && pwd -L)/SwiftLint"
 
+          echo SWIFTLINT_OS_VERSION_HASH="$(uname -prsv | openssl dgst -sha256 -binary | xxd -p -c 256)" >> $GITHUB_ENV
           echo SWIFTLINT_PATH="$SWIFTLINT_PATH" >> $GITHUB_ENV
           echo SWIFTLINT_PACKAGE_ARGS="--package-path "$SWIFTLINT_PATH" -c release --manifest-cache local --disable-index-store --use-integrated-swift-driver" >> $GITHUB_ENV
       - uses: actions/checkout@v3
@@ -77,11 +78,10 @@ jobs:
         id: cache
         with:
           path: '${{ env.SWIFTLINT_PATH }}/.build'
-          key: sinoru-actions-swiftlint-${{ runner.os }}-swift-${{ env.SWIFT_VERSION }}-${{ env.SWIFTLINT_VERSION }}-${{ hashFiles('${{ env.SWIFTLINT_PATH }}/Package.*') }}
+          key: sinoru-actions-swiftlint-${{ runner.os }}-${{ env.SWIFTLINT_OS_VERSION_HASH }}-swift-${{ env.SWIFT_VERSION }}-${{ inputs.swiftlint-version }}
           restore-keys: |
-            sinoru-actions-swiftlint-${{ runner.os }}-swift-${{ env.SWIFT_VERSION }}-${{ env.SWIFTLINT_VERSION }}-
-            sinoru-actions-swiftlint-${{ runner.os }}-swift-${{ env.SWIFT_VERSION }}-
-            sinoru-actions-swiftlint-${{ runner.os }}-swift-
+            sinoru-actions-swiftlint-${{ runner.os }}-${{ env.SWIFTLINT_OS_VERSION_HASH }}-swift-${{ env.SWIFT_VERSION }}-
+            sinoru-actions-swiftlint-${{ runner.os }}-${{ env.SWIFTLINT_OS_VERSION_HASH }}-swift-
       - name: swift build
         run: swift build $SWIFTLINT_PACKAGE_ARGS
 
