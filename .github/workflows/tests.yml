@@ -73,8 +73,15 @@ jobs:
           echo SWIFTLINT_PATH="$SWIFTLINT_PATH" >> $GITHUB_ENV
           echo SWIFTLINT_PACKAGE_ARGS="--package-path "$SWIFTLINT_PATH" -c release --manifest-cache local --disable-index-store --use-integrated-swift-driver" >> $GITHUB_ENV
       - run: |
-          git clone --depth 1 --branch "${{ inputs.swiftlint-version }}" https://github.com/realm/SwiftLint.git "${{ env.SWIFTLINT_PATH }}" ||
-          git clone --branch "${{ inputs.swiftlint-version }}" https://github.com/realm/SwiftLint.git "${{ env.SWIFTLINT_PATH }}"
+          mkdir -p "${{ env.SWIFTLINT_PATH }}"
+          pushd "${{ env.SWIFTLINT_PATH }}"
+
+          git init
+          git remote add origin https://github.com/realm/SwiftLint.git
+          git fetch --depth 1 origin "${{ inputs.swiftlint-version }}"
+          git checkout FETCH_HEAD
+
+          popd
         shell: bash
       - uses: actions/cache@v3
         id: cache
