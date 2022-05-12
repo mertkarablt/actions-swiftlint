@@ -29,14 +29,12 @@ runs:
         echo SWIFTLINT_PACKAGE_ARGS="--package-path "$SWIFTLINT_PATH" -c release --manifest-cache local --disable-index-store --use-integrated-swift-driver" >> $GITHUB_ENV
       shell: bash
     - run: |
-        mkdir -p "${{ env.SWIFTLINT_PATH }}"
+        git init -q "${{ env.SWIFTLINT_PATH }}"
+
         pushd "${{ env.SWIFTLINT_PATH }}"
-
-        git init
         git remote add origin https://github.com/realm/SwiftLint.git
-        git fetch --depth 1 origin "${{ inputs.swiftlint-version }}"
-        git checkout FETCH_HEAD
-
+        git fetch --no-tags --prune --progress --no-recurse-submodules --depth 1 origin "${{ inputs.swiftlint-version }}"
+        git checkout --progress --force FETCH_HEAD
         popd
       shell: bash
     - uses: actions/cache@v3
