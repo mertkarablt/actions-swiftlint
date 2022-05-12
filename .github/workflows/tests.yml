@@ -43,6 +43,8 @@ jobs:
       matrix:
         virtual-environment: ["ubuntu-18.04", "ubuntu-20.04", "macos-11", "macos-12"]
         swift-version: ["5.5.3", "5.6.1"]
+        swiftlint-version: ["0.47.1", "master", "809dcc6bdcf40b35fc23c01086fa884f84ad9473"]
+
     runs-on: ${{ matrix.virtual-environment }}
     steps:
       - uses: actions/checkout@master
@@ -52,6 +54,7 @@ jobs:
       - uses: ./
         with:
           working-directory: test/Warnings
+          swiftlint-version: ${{ matrix.swiftlint-version }}
 
   swiftlint-tests:
     name: SwiftLint Tests
@@ -69,11 +72,15 @@ jobs:
           echo SWIFTLINT_OS_VERSION_HASH="$(uname -prsv | openssl dgst -sha256 -binary | xxd -p -c 256)" >> $GITHUB_ENV
           echo SWIFTLINT_PATH="$SWIFTLINT_PATH" >> $GITHUB_ENV
           echo SWIFTLINT_PACKAGE_ARGS="--package-path "$SWIFTLINT_PATH" -c release --manifest-cache local --disable-index-store --use-integrated-swift-driver" >> $GITHUB_ENV
-      - uses: actions/checkout@v3
-        with: 
-          repository: 'realm/SwiftLint'
-          ref: '${{ env.SWIFTLINT_VERSION }}'
-          path: '${{ env.SWIFTLINT_PATH }}'
+      - run: |
+          git init -q "${{ env.SWIFTLINT_PATH }}"
+
+          pushd "${{ env.SWIFTLINT_PATH }}"
+          git remote add origin https://github.com/realm/SwiftLint.git
+          git fetch --no-tags --prune --progress --no-recurse-submodules --depth 1 origin "${{ inputs.swiftlint-version }}"
+          git checkout --progress --force FETCH_HEAD
+          popd
+        shell: bash
       - uses: actions/cache@v3
         id: cache
         with:
