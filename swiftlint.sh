@@ -41,8 +41,8 @@ fi
 
 if ! ${DIFF_BASE+false};
 then
-    # Find all Swift files in the repository
-    changedFiles=$(git --no-pager diff --name-only --relative ${GITHUB_HEAD_REF} $(git merge-base ${GITHUB_HEAD_REF} ${GITHUB_BASE_REF}) -- '*.swift')
+    # Find all changed Swift files in the repository
+    changedFiles=$(git --no-pager diff --name-only --relative "${GITHUB_HEAD_REF}" $(git merge-base "${GITHUB_HEAD_REF}" "${GITHUB_BASE_REF}") -- '*.swift')
     echo "changed files $changedFiles"
 
     if [ -z "$changedFiles" ]
