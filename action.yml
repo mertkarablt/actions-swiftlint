@@ -22,6 +22,8 @@ runs:
   using: "composite"
   steps:
     - run: |
+        sh -c "git config --global --add safe.directory $PWD"
+        
         export SWIFTLINT_PATH="$(cd ${{ github.action_path }} && pwd -L)/SwiftLint"
         
         echo SWIFTLINT_OS_VERSION_HASH="$(uname -prsv | openssl dgst -sha256 -binary | xxd -p -c 256)" >> $GITHUB_ENV
@@ -53,7 +55,9 @@ runs:
       run: swift package --package-path "$SWIFTLINT_PATH" reset && swift build $SWIFTLINT_PACKAGE_ARGS --product swiftlint
       shell: bash
     - name: swift run
-      run: ${{ github.action_path }}/swiftlint.sh ${{ inputs.swiftlint-args }}
+      run: |
+        sh -c "git config --global --add safe.directory $PWD"
+        ${{ github.action_path }}/swiftlint.sh ${{ inputs.swiftlint-args }}
       shell: bash
       working-directory: '${{ github.workspace }}/${{ inputs.working-directory }}'
  
