@@ -55,4 +55,4 @@ then
     fi
 fi
 
-set -o pipefail && swift run $SWIFTLINT_PACKAGE_ARGS --skip-build swiftlint "$@" -- $changedFiles | stripPWD | convertToGitHubActionsLoggingCommands
+set -o pipefail && swiftlint "$@" -- $changedFiles | stripPWD | convertToGitHubActionsLoggingCommands
