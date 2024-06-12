@@ -8,10 +8,6 @@ branding:
   icon: 'shield'
   color: 'orange'
 inputs:
-  swiftlint-version:
-    description: "A SwiftLint version to use."
-    required: true
-    default: '0.55.1'
   swiftlint-args:
     description: "Arguments to SwiftLint."
     required: false
