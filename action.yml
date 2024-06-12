@@ -3,7 +3,7 @@
 
 name: 'GitHub Actions for SwiftLint'
 description: 'A tool to enforce Swift style and conventions'
-author: 'Jaehong Kang <sinoru@me.com>'
+author: 'Mert Karabulut <karabulutmert90@gmail.com>'
 branding:
   icon: 'shield'
   color: 'orange'
@@ -11,7 +11,7 @@ inputs:
   swiftlint-version:
     description: "A SwiftLint version to use."
     required: true
-    default: '0.47.1'
+    default: '0.55.1'
   swiftlint-args:
     description: "Arguments to SwiftLint."
     required: false
@@ -27,6 +27,9 @@ runs:
         echo SWIFTLINT_OS_VERSION_HASH="$(uname -prsv | openssl dgst -sha256 -binary | xxd -p -c 256)" >> $GITHUB_ENV
         echo SWIFTLINT_PATH="$SWIFTLINT_PATH" >> $GITHUB_ENV
         echo SWIFTLINT_PACKAGE_ARGS="--package-path "$SWIFTLINT_PATH" -c release --manifest-cache local --disable-index-store --use-integrated-swift-driver" >> $GITHUB_ENV
+        echo "$SWIFTLINT_OS_VERSION_HASH"
+        echo "$SWIFTLINT_PATH"
+        echo "$SWIFTLINT_PACKAGE_ARGS"
       shell: bash
     - run: |
         git init -q "${{ env.SWIFTLINT_PATH }}"
